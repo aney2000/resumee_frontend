@@ -4,6 +4,7 @@ import { HeroSection } from '@/features/hero/HeroSection';
 import { HeroVisualPlaceholder } from '@/app/HeroVisualPlaceholder';
 import { ExperienceSection } from '@/features/experience/ExperienceSection';
 import { EducationSection } from '@/features/education/EducationSection';
+import { ProjectsSection } from '@/features/projects/ProjectsSection';
 
 export interface PageSection {
   readonly id: string;
@@ -34,5 +35,10 @@ export const sections: readonly PageSection[] = [
     id: 'education',
     label: 'Education',
     render: (profile, id) => <EducationSection id={id} education={profile.education} now={now} />,
+  },
+  {
+    id: 'projects',
+    label: 'Projects',
+    render: (profile, id) => <ProjectsSection id={id} projects={profile.projects} />,
   },
 ];
