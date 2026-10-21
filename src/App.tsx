@@ -1,4 +1,5 @@
 import { useProfile } from '@/app/ProfileContext';
+import { PortfolioPage } from '@/app/PortfolioPage';
 
 export function App() {
   const state = useProfile();
@@ -9,10 +10,6 @@ export function App() {
     case 'error':
       return <p role="alert">Could not load profile: {state.error.message}</p>;
     case 'ready':
-      return (
-        <main>
-          <h1>{state.profile.identity.fullName}</h1>
-        </main>
-      );
+      return <PortfolioPage profile={state.profile} />;
   }
 }

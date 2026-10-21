@@ -6,13 +6,14 @@ import styles from './HeroSection.module.css';
 interface HeroSectionProps {
   readonly identity: Identity;
   readonly visual?: ReactNode;
+  readonly id?: string;
 }
 
-export function HeroSection({ identity, visual }: HeroSectionProps) {
+export function HeroSection({ identity, visual, id }: HeroSectionProps) {
   const headingId = useId();
 
   return (
-    <section aria-labelledby={headingId} className={styles.hero}>
+    <section id={id} aria-labelledby={headingId} className={styles.hero}>
       <div className={styles.text}>
         <p className={styles.headline}>{identity.headline}</p>
         <h1 id={headingId} className={styles.name}>
