@@ -27,9 +27,8 @@ describe('layoutMilestones', () => {
   });
 
   it('spaces milestones by the configured step along the path axis', () => {
-    const positions = layoutMilestones(newestFirst, { spacing: 4 }).map((m) => m.position);
-    expect(positions[1]![2] - positions[0]![2]).toBeCloseTo(-4);
-    expect(positions[2]![2] - positions[1]![2]).toBeCloseTo(-4);
+    const depths = layoutMilestones(newestFirst, { spacing: 4 }).map((m) => m.position[2]);
+    expect(depths).toEqual([0, -4, -8].map((z) => expect.closeTo(z)));
   });
 
   it('curves the path sideways within the configured radius', () => {
