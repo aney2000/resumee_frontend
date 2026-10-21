@@ -16,6 +16,8 @@ import { Band } from './Band';
 import { computeDragTarget, isClick, type Vec2, type Vec3 } from './dragMath';
 import { useBadgeTextures } from './useBadgeTextures';
 
+// Mirrors rapier's RigidBodyType enum; rapier3d-compat is only a transitive dependency.
+const BODY_TYPE = { dynamic: 0, kinematicPosition: 2 } as const;
 const SEGMENT_LENGTH = 1;
 const CARD_TOP: [number, number, number] = [0, CARD_HEIGHT / 2 + 0.08, 0];
 const SEGMENT_PROPS: RigidBodyProps = {
@@ -90,13 +92,13 @@ export function LanyardScene({ content, flipped, onFlip }: LanyardSceneProps) {
       downPos: { x: event.clientX, y: event.clientY },
       downTime: performance.now(),
     });
-    body.setBodyType(2, true); // kinematic position based
+    body.setBodyType(BODY_TYPE.kinematicPosition, true);
   };
 
   const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
     if (!press) return;
     (event.target as Element | null)?.releasePointerCapture?.(event.pointerId);
-    card.current?.setBodyType(0, true); // dynamic
+    card.current?.setBodyType(BODY_TYPE.dynamic, true);
     const upPos = { x: event.clientX, y: event.clientY };
     if (isClick(press.downPos, upPos, press.downTime, performance.now())) onFlip();
     setPress(null);
