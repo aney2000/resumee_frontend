@@ -29,6 +29,33 @@ npm run dev          # http://localhost:5173
 npm run build && npm run preview
 ```
 
+### Windows with Node in WSL
+
+Run the commands inside WSL and open the URL in your Windows browser:
+
+```bash
+cd /mnt/c/path/to/Frontend
+npm ci
+CHOKIDAR_USEPOLLING=true npm run dev -- --host   # http://localhost:5173
+```
+
+`CHOKIDAR_USEPOLLING=true` is needed when the project lives on the Windows drive (`/mnt/c/...`): WSL receives no file-change events from it, so without polling edits are not picked up until the server restarts.
+
+## Troubleshooting: I only see the 2D version
+
+The 3D badge and the 3D CV are replaced by their 2D fallbacks when the browser reports **no WebGL** or **`prefers-reduced-motion: reduce`**. The fallback badge then flips instantly instead of animating.
+
+1. **Reduced motion (most common on Windows).** Turn on _Settings -> Accessibility -> Visual effects -> Animation effects_ and reload the page. To test without changing the OS setting: Chrome/Edge DevTools -> `Ctrl+Shift+P` -> _Show Rendering_ -> _Emulate CSS media feature prefers-reduced-motion_ -> `no-preference`, then reload.
+2. **WebGL unavailable.** Check `chrome://gpu` (or `edge://gpu`) for "WebGL: Hardware accelerated" and enable _Use graphics acceleration when available_ in the browser settings.
+3. **Quick check** in the DevTools console:
+
+   ```js
+   matchMedia('(prefers-reduced-motion: reduce)').matches; // must be false
+   !!document.createElement('canvas').getContext('webgl2'); // must be true
+   ```
+
+With both conditions met, the hero shows the lanyard (_Drag me - click to flip_) and the 3D CV section renders a canvas.
+
 ## Make it yours
 
 1. Edit **`src/data/profile.data.ts`** - it is the only file you need to change. Dates use `YYYY-MM`; omit `end` for ongoing items; every `id` must be unique.
@@ -98,3 +125,15 @@ src/
 ## Workflow
 
 Each iteration follows red -> green -> refactor -> lint, then one Conventional Commit (`feat:`, `test:`, `build:`, ...). See `git log` for the history.
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push to `master` and every pull request targeting it, with three parallel gates:
+
+| Job       | Checks                                                                      |
+| --------- | --------------------------------------------------------------------------- |
+| **Lint**  | `typecheck`, `lint`, `format:check`                                         |
+| **Test**  | `npm test`                                                                  |
+| **Smoke** | `npm run build`, serve `dist` with `vite preview`, expect HTTP 200 from `/` |
+
+Mark the three jobs as required status checks in the branch protection rules for `master` to block merging on failure.
