@@ -62,7 +62,18 @@ describe('App', () => {
       resolvingRepository(createProfile({ identity: { ...base.identity, headline: 'Builder' } })),
     );
 
-    expect(await screen.findByText('Builder')).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1 })).toBeInTheDocument();
+    expect(screen.getAllByText('Builder').length).toBeGreaterThan(0);
+  });
+
+  it('shows the flippable badge in the hero', async () => {
+    const base = createProfile();
+    renderApp(
+      resolvingRepository(createProfile({ identity: { ...base.identity, badgeId: 'AE-1843' } })),
+    );
+
+    const badge = await screen.findByRole('button', { name: 'Flip badge' });
+    expect(badge).toHaveTextContent('AE-1843');
   });
 
   it('shows an error state when loading fails', async () => {
