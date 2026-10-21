@@ -8,6 +8,8 @@ import { EducationSection } from '@/features/education/EducationSection';
 import { ProjectsSection } from '@/features/projects/ProjectsSection';
 import { CoursesSection } from '@/features/courses/CoursesSection';
 import { SkillsSection } from '@/features/skills/SkillsSection';
+import { buildTimeline } from '@/domain/timeline';
+import { Cv3dSection } from '@/features/cv3d/Cv3dSection';
 
 export interface PageSection {
   readonly id: string;
@@ -30,6 +32,11 @@ export const sections: readonly PageSection[] = [
         visual={<HeroBadge content={toBadgeContent(profile.identity)} />}
       />
     ),
+  },
+  {
+    id: 'journey',
+    label: '3D CV',
+    render: (profile, id) => <Cv3dSection id={id} entries={buildTimeline(profile)} />,
   },
   {
     id: 'experience',
