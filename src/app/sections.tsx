@@ -2,12 +2,17 @@ import type { ReactNode } from 'react';
 import type { Profile } from '@/domain/profile';
 import { HeroSection } from '@/features/hero/HeroSection';
 import { HeroVisualPlaceholder } from '@/app/HeroVisualPlaceholder';
+import { ExperienceSection } from '@/features/experience/ExperienceSection';
+import { EducationSection } from '@/features/education/EducationSection';
 
 export interface PageSection {
   readonly id: string;
   readonly label: string;
   readonly render: (profile: Profile, id: string) => ReactNode;
 }
+
+// Captured once at the composition root so presentational components stay pure.
+const now = new Date();
 
 // Single source of truth for page order and navigation: append a section here to add it.
 export const sections: readonly PageSection[] = [
@@ -17,5 +22,17 @@ export const sections: readonly PageSection[] = [
     render: (profile, id) => (
       <HeroSection id={id} identity={profile.identity} visual={<HeroVisualPlaceholder />} />
     ),
+  },
+  {
+    id: 'experience',
+    label: 'Experience',
+    render: (profile, id) => (
+      <ExperienceSection id={id} experiences={profile.experiences} now={now} />
+    ),
+  },
+  {
+    id: 'education',
+    label: 'Education',
+    render: (profile, id) => <EducationSection id={id} education={profile.education} now={now} />,
   },
 ];
