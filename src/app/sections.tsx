@@ -6,6 +6,7 @@ import { ExperienceSection } from '@/features/experience/ExperienceSection';
 import { EducationSection } from '@/features/education/EducationSection';
 import { ProjectsSection } from '@/features/projects/ProjectsSection';
 import { CoursesSection } from '@/features/courses/CoursesSection';
+import { SkillsSection } from '@/features/skills/SkillsSection';
 
 export interface PageSection {
   readonly id: string;
@@ -46,5 +47,10 @@ export const sections: readonly PageSection[] = [
     id: 'courses',
     label: 'Courses',
     render: (profile, id) => <CoursesSection id={id} courses={profile.courses} />,
+  },
+  {
+    id: 'skills',
+    label: 'Skills',
+    render: (profile, id) => <SkillsSection id={id} skills={profile.skills} />,
   },
 ];
