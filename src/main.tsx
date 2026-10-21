@@ -4,6 +4,8 @@ import { App } from '@/App';
 import { ProfileProvider } from '@/app/ProfileContext';
 import { profileData } from '@/data/profile.data';
 import { StaticProfileRepository } from '@/services/ProfileRepository';
+import '@/styles/tokens.css';
+import '@/styles/global.css';
 
 const container = document.getElementById('root');
 if (!container) {
