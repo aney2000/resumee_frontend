@@ -5,6 +5,10 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    // Bind mounts (Docker on Windows/macOS) emit no fs events; polling is opt-in via env.
+    watch: { usePolling: process.env.CHOKIDAR_USEPOLLING === 'true' },
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
