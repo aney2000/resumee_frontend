@@ -2,6 +2,7 @@ import { Sparkles, Stars } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import type { Milestone } from '@/features/cv3d/layout';
 import { cameraTargetFor } from '@/features/cv3d/layout';
+import { labelVisibility } from '@/features/cv3d/labelVisibility';
 import { CameraRig } from './CameraRig';
 import { JourneyPath } from './JourneyPath';
 import { MilestoneNode } from './MilestoneNode';
@@ -14,7 +15,9 @@ export interface JourneyCanvasProps {
 
 /** Offline-friendly 3D journey (no remote fonts or HDRs). */
 export function JourneyCanvas({ milestones, selectedId, onSelect }: JourneyCanvasProps) {
-  const selected = milestones.find((m) => m.entry.id === selectedId) ?? milestones[0];
+  const found = milestones.findIndex((m) => m.entry.id === selectedId);
+  const selectedIndex = found >= 0 ? found : milestones.length > 0 ? 0 : -1;
+  const selected = milestones[selectedIndex];
   const focus = selected?.position ?? ([0, 0, 0] as const);
 
   return (
@@ -33,17 +36,18 @@ export function JourneyCanvas({ milestones, selectedId, onSelect }: JourneyCanva
         <Stars radius={60} depth={40} count={1500} factor={3} fade speed={0.5} />
         <Sparkles
           count={60}
-          scale={[12, 6, milestones.length * 3 + 6]}
+          scale={[12, 6, milestones.length * 4.5 + 6]}
           size={2}
           speed={0.3}
           opacity={0.5}
         />
         <JourneyPath milestones={milestones} />
-        {milestones.map((milestone) => (
+        {milestones.map((milestone, index) => (
           <MilestoneNode
             key={milestone.entry.id}
             milestone={milestone}
-            selected={milestone.entry.id === selected?.entry.id}
+            selected={index === selectedIndex}
+            label={labelVisibility(index, selectedIndex)}
             onSelect={onSelect}
           />
         ))}

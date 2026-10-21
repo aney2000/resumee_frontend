@@ -1,5 +1,5 @@
 import type { TimelineEntry } from '@/domain/timeline';
-import { cameraTargetFor, kindColors, layoutMilestones } from '@/features/cv3d/layout';
+import { cameraTargetFor, kindColors, layoutMilestones, type Vec3 } from '@/features/cv3d/layout';
 
 const entry = (
   id: string,
@@ -45,12 +45,38 @@ describe('layoutMilestones', () => {
   });
 });
 
+describe('layoutMilestones default spacing', () => {
+  it('leaves enough room between consecutive milestones for their labels', () => {
+    const [[ax, ay, az], [bx, by, bz]] = layoutMilestones(newestFirst).map((m) => m.position) as [
+      Vec3,
+      Vec3,
+    ];
+    expect(Math.hypot(bx - ax, by - ay, bz - az)).toBeGreaterThanOrEqual(4);
+  });
+});
+
 describe('cameraTargetFor', () => {
-  it('places the camera in front of and above the milestone, looking at it', () => {
-    const { position, lookAt } = cameraTargetFor([1, 2, -8]);
-    expect(lookAt).toEqual([1, 2, -8]);
-    expect(position[2]).toBeGreaterThan(-8);
-    expect(position[1]).toBeGreaterThan(2);
+  const node = [1, 2, -8] as const;
+  const { position, lookAt } = cameraTargetFor(node);
+
+  it('looks at the milestone', () => {
+    expect(lookAt).toEqual(node);
+  });
+
+  it('stands in front of, above and slightly to the side of the milestone', () => {
+    expect(position[2]).toBeGreaterThan(node[2]);
+    expect(position[1]).toBeGreaterThan(node[1]);
+    expect(Math.abs(position[0] - node[0])).toBeGreaterThan(0.5);
+  });
+
+  it('stands back far enough to keep the neighbouring milestones in frame', () => {
+    const distance = Math.hypot(
+      position[0] - node[0],
+      position[1] - node[1],
+      position[2] - node[2],
+    );
+    expect(distance).toBeGreaterThanOrEqual(8);
+    expect(distance).toBeLessThanOrEqual(14);
   });
 });
 

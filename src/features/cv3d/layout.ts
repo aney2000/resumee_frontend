@@ -30,8 +30,9 @@ export const kindColors: Record<TimelineKind, string> = {
   course: '#facc15',
 };
 
-const DEFAULTS: Required<LayoutOptions> = { spacing: 3, radius: 2.5, turn: Math.PI / 3 };
-const CAMERA_OFFSET: Vec3 = [0, 1.2, 4.5];
+const DEFAULTS: Required<LayoutOptions> = { spacing: 4.5, radius: 2.5, turn: Math.PI / 3 };
+// Back, up and to the side: keeps the ±1 neighbours (one spacing away) inside a 50° fov.
+const CAMERA_OFFSET: Vec3 = [3, 2.5, 9];
 
 function compareOldestFirst(a: TimelineEntry, b: TimelineEntry): number {
   return compareYearMonth(a.start, b.start) || a.id.localeCompare(b.id);
