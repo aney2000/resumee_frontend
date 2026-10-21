@@ -1,4 +1,4 @@
-import { render, renderHook, screen, waitFor } from '@testing-library/react';
+import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { ProfileProvider, useProfile } from '@/app/ProfileContext';
 import type { ProfileRepository } from '@/services/ProfileRepository';
@@ -51,14 +51,15 @@ describe('ProfileProvider / useProfile', () => {
     expect(getProfile).toHaveBeenCalledTimes(1);
   });
 
-  it('renders its children', () => {
+  it('renders its children', async () => {
     render(
       <ProfileProvider repository={resolvingRepository(createProfile())}>
         <p>child</p>
       </ProfileProvider>,
     );
 
-    expect(screen.getByText('child')).toBeInTheDocument();
+    expect(await screen.findByText('child')).toBeInTheDocument();
+    await act(() => Promise.resolve());
   });
 
   it('throws a clear error when used outside the provider', () => {
