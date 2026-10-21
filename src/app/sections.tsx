@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Profile } from '@/domain/profile';
 import { HeroSection } from '@/features/hero/HeroSection';
-import { FlipBadge } from '@/features/badge/FlipBadge';
+import { HeroBadge } from '@/features/badge/HeroBadge';
 import { toBadgeContent } from '@/features/badge/badgeContent';
 import { ExperienceSection } from '@/features/experience/ExperienceSection';
 import { EducationSection } from '@/features/education/EducationSection';
@@ -27,7 +27,7 @@ export const sections: readonly PageSection[] = [
       <HeroSection
         id={id}
         identity={profile.identity}
-        visual={<FlipBadge content={toBadgeContent(profile.identity)} />}
+        visual={<HeroBadge content={toBadgeContent(profile.identity)} />}
       />
     ),
   },
