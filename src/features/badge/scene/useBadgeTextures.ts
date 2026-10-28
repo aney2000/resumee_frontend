@@ -5,7 +5,7 @@ import type { BadgePainterContext, FaceSize } from '@/features/badge/paintBadgeF
 import { paintBadgeBack, paintBadgeFront } from '@/features/badge/paintBadgeFace';
 
 /** Badge face resolution; matches the 1:1.5 aspect ratio of the badge card. */
-export const BADGE_FACE_SIZE: FaceSize = { width: 512, height: 768 };
+export const BADGE_FACE_SIZE: FaceSize = { width: 1024, height: 1536 };
 
 /** The subset of a canvas element the hook needs. */
 export interface BadgeCanvas {

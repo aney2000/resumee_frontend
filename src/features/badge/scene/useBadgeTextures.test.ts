@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import type { Texture } from 'three';
 import type { BadgeContent } from '@/features/badge/badgeContent';
 import type { BadgeCanvas, BadgeTextureDeps } from '@/features/badge/scene/useBadgeTextures';
-import { BADGE_FACE_SIZE, useBadgeTextures } from '@/features/badge/scene/useBadgeTextures';
+import { useBadgeTextures } from '@/features/badge/scene/useBadgeTextures';
 
 const content: BadgeContent = {
   front: {
@@ -58,13 +58,13 @@ function setup(loadImage: BadgeTextureDeps['loadImage']) {
 }
 
 describe('useBadgeTextures', () => {
-  it('paints front and back canvases at the badge face size', () => {
+  it('paints front and back canvases sharp enough for the enlarged badge', () => {
     const { deps, contexts, textures } = setup(() => new Promise(() => undefined));
     const { result } = renderHook(() => useBadgeTextures(content, deps));
 
     expect(result.current.front).toBe(textures[0]);
     expect(result.current.back).toBe(textures[1]);
-    expect(textures[0]?.canvas).toMatchObject(BADGE_FACE_SIZE);
+    expect(textures[0]?.canvas).toMatchObject({ width: 1024, height: 1536 });
     const texts = (i: number) => contexts[i]?.fillText.mock.calls.map((c) => c[0]);
     expect(texts(0)).toContain('Ada Lovelace');
     expect(texts(0)).toContain('AL');
