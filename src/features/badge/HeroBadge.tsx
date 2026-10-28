@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from 'react';
 import type { BadgeContent } from '@/features/badge/badgeContent';
 import { useBadgeLifecycle } from '@/features/badge/badgeLifecycle';
+import { BadgeControls } from '@/features/badge/BadgeControls';
 import { supportsWebGL } from '@/features/badge/capabilities';
 import { FlipBadge } from '@/features/badge/FlipBadge';
 import styles from './HeroBadge.module.css';
@@ -31,8 +32,14 @@ export function HeroBadge({ content, canUseWebGL = supportsWebGL }: HeroBadgePro
       >
         Flip badge
       </button>
+      <BadgeControls onReset={badge.reset} />
       <Suspense fallback={<FlipBadge content={content} />}>
-        <LanyardCanvas content={content} flipped={badge.flipped} onFlip={badge.flip} />
+        <LanyardCanvas
+          content={content}
+          generation={badge.generation}
+          flipped={badge.flipped}
+          onFlip={badge.flip}
+        />
       </Suspense>
       <p className={styles.hint} aria-hidden="true">
         Drag me · click to flip

@@ -5,8 +5,13 @@ import type { BadgeContent } from '@/features/badge/badgeContent';
 import type { LanyardCanvasProps } from '@/features/badge/scene/LanyardCanvas';
 
 vi.mock('./scene/LanyardCanvas', () => ({
-  default: ({ flipped, onFlip }: LanyardCanvasProps) => (
-    <div data-testid="lanyard-canvas" data-flipped={String(flipped)} onClick={onFlip} />
+  default: ({ flipped, generation, onFlip }: LanyardCanvasProps) => (
+    <div
+      data-testid="lanyard-canvas"
+      data-flipped={String(flipped)}
+      data-generation={generation}
+      onClick={onFlip}
+    />
   ),
 }));
 
@@ -54,6 +59,18 @@ describe('HeroBadge', () => {
     expect(toggle).toHaveAttribute('aria-pressed', 'true');
 
     await user.click(canvas);
+    expect(canvas).toHaveAttribute('data-flipped', 'false');
+  });
+
+  it('replaces a stuck badge with a fresh one showing its front', async () => {
+    const user = userEvent.setup();
+    render(<HeroBadge content={content} canUseWebGL={yes} />);
+    const canvas = await screen.findByTestId('lanyard-canvas');
+    await user.click(canvas);
+
+    await user.click(screen.getByRole('button', { name: 'Reset badge' }));
+
+    expect(canvas).toHaveAttribute('data-generation', '1');
     expect(canvas).toHaveAttribute('data-flipped', 'false');
   });
 });

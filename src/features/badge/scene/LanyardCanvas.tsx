@@ -11,12 +11,14 @@ const CAMERA_Z = distanceToFill(CARD_HEIGHT, 0.55, FOV);
 
 export interface LanyardCanvasProps {
   readonly content: BadgeContent;
+  /** Changing it swaps in a fresh badge. */
+  readonly generation: number;
   readonly flipped: boolean;
   readonly onFlip: () => void;
 }
 
 /** Offline-friendly canvas (no remote HDRs) hosting the physics lanyard badge. */
-export function LanyardCanvas({ content, flipped, onFlip }: LanyardCanvasProps) {
+export function LanyardCanvas({ content, generation, flipped, onFlip }: LanyardCanvasProps) {
   const { name, title } = content.front;
   return (
     <div
@@ -29,7 +31,8 @@ export function LanyardCanvas({ content, flipped, onFlip }: LanyardCanvasProps) 
         <directionalLight position={[5, 5, 5]} intensity={2} />
         <directionalLight position={[-5, 2, -5]} intensity={1} />
         <Physics gravity={[0, -40, 0]} timeStep={1 / 60} interpolate>
-          <LanyardScene content={content} flipped={flipped} onFlip={onFlip} />
+          {/* Remounting rebuilds every body and joint, so the new badge swings in as on first load. */}
+          <LanyardScene key={generation} content={content} flipped={flipped} onFlip={onFlip} />
         </Physics>
       </Canvas>
     </div>
