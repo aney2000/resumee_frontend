@@ -1,5 +1,6 @@
 import type { Profile } from '@/domain/profile';
 
+// UI depends on this seam, not on the data file, so the source (static file, API, test fake) can change.
 export interface ProfileRepository {
   getProfile(): Promise<Profile>;
 }

@@ -41,6 +41,7 @@ export default defineConfig({
     },
   },
   test: {
+    // jsdom has no WebGL: scene/ components stay thin and their logic lives in pure, tested modules.
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],

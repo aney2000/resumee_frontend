@@ -1,3 +1,5 @@
+// src/domain is framework-free (no React, no DOM) so it stays trivially unit-testable.
+
 /** Calendar month in ISO form: 'YYYY-MM'. */
 export type YearMonth = string;
 
