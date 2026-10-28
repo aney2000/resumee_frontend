@@ -41,6 +41,8 @@ export default defineConfig({
     },
   },
   test: {
+    // Browser tests in e2e/ run under Playwright, not Vitest.
+    include: ['src/**/*.test.{ts,tsx}'],
     // jsdom has no WebGL: scene/ components stay thin and their logic lives in pure, tested modules.
     environment: 'jsdom',
     globals: true,
