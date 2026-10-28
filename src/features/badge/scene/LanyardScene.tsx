@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
-import { useFrame, type ThreeEvent } from '@react-three/fiber';
+import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import {
   BallCollider,
   CuboidCollider,
@@ -17,6 +17,7 @@ import { Band } from './Band';
 import { computeDragTarget, isClick, type Vec2, type Vec3 } from './dragMath';
 import { Scissors } from './Scissors';
 import { useBadgeTextures } from './useBadgeTextures';
+import { useTouchScrollGuard } from './useTouchScrollGuard';
 
 // Mirrors rapier's RigidBodyType enum; rapier3d-compat is only a transitive dependency.
 const BODY_TYPE = { dynamic: 0, kinematicPosition: 2 } as const;
@@ -85,6 +86,10 @@ export function LanyardScene({
   const j3 = useRef<RapierRigidBody>(null);
   const card = useRef<RapierRigidBody>(null);
   const [press, setPress] = useState<PressState | null>(null);
+  // Read synchronously by the touch guard; state would lag one render behind the finger.
+  const dragging = useRef(false);
+  const isDragging = useCallback(() => dragging.current, []);
+  const canvas = useThree((state) => state.gl.domElement);
   const pointerWorld = useMemo(() => new Vector3(), []);
   const direction = useMemo(() => new Vector3(), []);
   const bandBodies = useMemo(() => [j3, j2, j1, fixed], []);
@@ -93,10 +98,12 @@ export function LanyardScene({
   const cut = phase === 'falling';
 
   useRope(fixed, j1, j2, j3);
+  useTouchScrollGuard(canvas, isDragging);
 
   useEffect(() => {
     const body = card.current;
     if (!cut || !body) return;
+    dragging.current = false;
     setPress(null);
     body.setBodyType(BODY_TYPE.dynamic, true);
     // The rope damping would turn the drop into a slow glide.
@@ -119,6 +126,7 @@ export function LanyardScene({
     event.stopPropagation();
     (event.target as Element | null)?.setPointerCapture?.(event.pointerId);
     const position = body.translation();
+    dragging.current = true;
     setPress({
       offset: {
         x: event.point.x - position.x,
@@ -132,6 +140,7 @@ export function LanyardScene({
   };
 
   const handlePointerUp = (event: ThreeEvent<PointerEvent>) => {
+    dragging.current = false;
     if (!press) return;
     (event.target as Element | null)?.releasePointerCapture?.(event.pointerId);
     card.current?.setBodyType(BODY_TYPE.dynamic, true);
