@@ -6,6 +6,9 @@ const PORT = 4173;
 export default defineConfig({
   testDir: 'e2e',
   fullyParallel: true,
+  // Software WebGL is CPU-bound: fewer, longer-lived workers beat many starved ones.
+  workers: 4,
+  timeout: 60_000,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'github' : 'list',

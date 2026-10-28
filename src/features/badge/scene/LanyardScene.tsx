@@ -114,6 +114,8 @@ export function LanyardScene({
     const body = card.current;
     if (cut && body && body.translation().y < FALL_OUT_Y) onFellOut();
     if (!press || !body) return;
+    // react-three-rapier stops drawing sleeping bodies, so a held card must be kept awake.
+    body.wakeUp();
     pointerWorld.set(pointer.x, pointer.y, 0.5).unproject(camera);
     direction.copy(pointerWorld).sub(camera.position).normalize();
     pointerWorld.copy(camera.position).addScaledVector(direction, camera.position.length());
