@@ -1,5 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import type { BadgeContent } from '@/features/badge/badgeContent';
+import { useBadgeLifecycle } from '@/features/badge/badgeLifecycle';
 import { supportsWebGL } from '@/features/badge/capabilities';
 import { FlipBadge } from '@/features/badge/FlipBadge';
 import styles from './HeroBadge.module.css';
@@ -15,25 +16,23 @@ export interface HeroBadgeProps {
 /** Picks the physics lanyard when the device can run it, otherwise the CSS flip badge. */
 export function HeroBadge({ content, canUseWebGL = supportsWebGL }: HeroBadgeProps) {
   const [webGL] = useState(canUseWebGL);
-  const [flipped, setFlipped] = useState(false);
+  const badge = useBadgeLifecycle();
 
   if (!webGL) return <FlipBadge content={content} />;
-
-  const flip = () => setFlipped((value) => !value);
 
   return (
     <div className={styles.stage}>
       <button
         type="button"
         className={styles.skipToggle}
-        aria-pressed={flipped}
+        aria-pressed={badge.flipped}
         aria-label="Flip badge"
-        onClick={flip}
+        onClick={badge.flip}
       >
         Flip badge
       </button>
       <Suspense fallback={<FlipBadge content={content} />}>
-        <LanyardCanvas content={content} flipped={flipped} onFlip={flip} />
+        <LanyardCanvas content={content} flipped={badge.flipped} onFlip={badge.flip} />
       </Suspense>
       <p className={styles.hint} aria-hidden="true">
         Drag me · click to flip
