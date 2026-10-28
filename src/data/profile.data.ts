@@ -18,18 +18,18 @@ import type { Profile } from '@/domain/profile';
 
 export const profileData: Profile = {
   identity: {
-    fullName: 'Your Name',
-    headline: 'Frontend Engineer',
-    location: 'Berlin, Germany',
+    fullName: 'Dragan Andrei-Valentin',
+    headline: 'Advanced Agile SW Engineer',
+    location: 'Sibiu, Romania',
     photoUrl: '/photo.svg',
     summary:
-      'Frontend engineer focused on accessible, well-tested interfaces and delightful interactive experiences. I enjoy turning complex problems into simple, maintainable products.',
-    badgeId: 'EMP-000123',
-    organization: 'Example Corp',
+      'SW Integrator & DevOps in R&D @ AUMOVIO.',
+    badgeId: 'Global ID 91111863',
+    organization: 'AUMOVIO',
     socials: [
-      { label: 'GitHub', url: 'https://github.com/your-handle', kind: 'github' },
-      { label: 'LinkedIn', url: 'https://www.linkedin.com/in/your-handle', kind: 'linkedin' },
-      { label: 'Email', url: 'mailto:you@example.com', kind: 'email' },
+      { label: 'GitHub', url: 'https://github.com/aney2000/', kind: 'github' },
+      { label: 'LinkedIn', url: 'https://www.linkedin.com/in/andrei-valentin-dr%C4%83gan-5975b0170', kind: 'linkedin' },
+      { label: 'Email', url: 'mailto:aneu2000@yahoo.com', kind: 'email' },
       { label: 'Website', url: 'https://example.com', kind: 'website' },
     ],
   },
