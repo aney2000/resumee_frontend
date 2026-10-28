@@ -40,4 +40,20 @@ describe('HeroSection', () => {
 
     expect(screen.getByText('3D badge')).toBeInTheDocument();
   });
+
+  it('offers a primary contact action when the profile has an email', () => {
+    const email = { label: 'Email', url: 'ada@example.com', kind: 'email' as const };
+    render(<HeroSection identity={{ ...identity, socials: [...identity.socials, email] }} />);
+
+    expect(screen.getByRole('link', { name: 'Get in touch' })).toHaveAttribute(
+      'href',
+      'mailto:ada@example.com',
+    );
+  });
+
+  it('omits the contact action when the profile has no email', () => {
+    render(<HeroSection identity={identity} />);
+
+    expect(screen.queryByRole('link', { name: 'Get in touch' })).not.toBeInTheDocument();
+  });
 });

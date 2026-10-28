@@ -1,15 +1,9 @@
 import type { SocialLink } from '@/domain/profile';
+import { socialHref } from '@/features/hero/socialHref';
 import styles from './SocialLinks.module.css';
 
 interface SocialLinksProps {
   readonly links: readonly SocialLink[];
-}
-
-function hrefFor(link: SocialLink): string {
-  if (link.kind === 'email' && !link.url.startsWith('mailto:')) {
-    return `mailto:${link.url}`;
-  }
-  return link.url;
 }
 
 function externalAttributes(link: SocialLink) {
@@ -25,7 +19,7 @@ export function SocialLinks({ links }: SocialLinksProps) {
     <ul aria-label="Social links" className={styles.list}>
       {links.map((link) => (
         <li key={link.url}>
-          <a className={styles.link} href={hrefFor(link)} {...externalAttributes(link)}>
+          <a className={styles.link} href={socialHref(link)} {...externalAttributes(link)}>
             {link.label}
           </a>
         </li>
