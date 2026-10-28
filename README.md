@@ -34,7 +34,7 @@ npm run docker:dev   # Vite dev server with hot reload on http://localhost:5173
 Equivalent raw commands: `docker compose up --build web` and `docker compose --profile dev up --build dev`.
 The image build runs every check (typecheck, lint, format, tests); a failing check aborts the build.
 
-### Node (18+)
+### Node (20+, 24 LTS recommended)
 
 ```bash
 npm ci

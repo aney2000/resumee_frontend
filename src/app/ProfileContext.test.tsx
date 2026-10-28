@@ -64,9 +64,16 @@ describe('ProfileProvider / useProfile', () => {
 
   it('throws a clear error when used outside the provider', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    // A cancelled error event tells jsdom the expected throw is handled, keeping test output clean.
+    const markHandled = (event: ErrorEvent) => event.preventDefault();
+    window.addEventListener('error', markHandled);
 
-    expect(() => renderHook(() => useProfile())).toThrow(
-      'useProfile must be used within a ProfileProvider',
-    );
+    try {
+      expect(() => renderHook(() => useProfile())).toThrow(
+        'useProfile must be used within a ProfileProvider',
+      );
+    } finally {
+      window.removeEventListener('error', markHandled);
+    }
   });
 });
