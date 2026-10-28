@@ -1,6 +1,6 @@
 import { lazy, Suspense, useMemo, useState, type KeyboardEvent } from 'react';
 import type { TimelineEntry } from '@/domain/timeline';
-import { supportsWebGL, usePrefersReducedMotion } from '@/features/badge/capabilities';
+import { supportsWebGL } from '@/features/badge/capabilities';
 import { kindColors, layoutMilestones } from '@/features/cv3d/layout';
 import { MilestoneControls } from '@/features/cv3d/MilestoneControls';
 import { MilestonePanel } from '@/features/cv3d/MilestonePanel';
@@ -15,7 +15,6 @@ export interface Cv3dSectionProps {
   readonly id: string;
   readonly entries: readonly TimelineEntry[];
   readonly canUseWebGL?: () => boolean;
-  readonly prefersReducedMotion?: boolean;
 }
 
 interface FallbackListProps {
@@ -49,15 +48,8 @@ function FallbackList({ entries, selectedId, onSelect }: FallbackListProps) {
 }
 
 /** Chronological 3D journey through the timeline, with an accessible 2D fallback. */
-export function Cv3dSection({
-  id,
-  entries,
-  canUseWebGL = supportsWebGL,
-  prefersReducedMotion,
-}: Cv3dSectionProps) {
-  const systemReducedMotion = usePrefersReducedMotion();
-  const [webGL] = useState(canUseWebGL);
-  const capable = webGL && !(prefersReducedMotion ?? systemReducedMotion);
+export function Cv3dSection({ id, entries, canUseWebGL = supportsWebGL }: Cv3dSectionProps) {
+  const [capable] = useState(canUseWebGL);
 
   const pathOrder = useMemo(() => layoutMilestones(entries).map((m) => m.entry), [entries]);
   const nav = useMilestoneNavigation(pathOrder);

@@ -70,15 +70,8 @@ describe('Cv3dSection', () => {
     expect(screen.getByText('Milestone 1 of 2')).toBeInTheDocument();
   });
 
-  it('uses the fallback when the user prefers reduced motion', () => {
-    render(<Cv3dSection id="journey" entries={entries} canUseWebGL={yes} prefersReducedMotion />);
-    expect(screen.queryByTestId('journey-canvas')).not.toBeInTheDocument();
-  });
-
   it('lazily renders the 3D journey when capable', async () => {
-    render(
-      <Cv3dSection id="journey" entries={entries} canUseWebGL={yes} prefersReducedMotion={false} />,
-    );
+    render(<Cv3dSection id="journey" entries={entries} canUseWebGL={yes} />);
 
     const canvas = await screen.findByTestId('journey-canvas');
     expect(canvas).toHaveAttribute('data-count', '3');
