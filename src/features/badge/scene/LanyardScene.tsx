@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type RefObject } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import {
   BallCollider,
@@ -11,15 +11,19 @@ import {
 } from '@react-three/rapier';
 import { Vector3 } from 'three';
 import type { BadgeContent } from '@/features/badge/badgeContent';
+import type { BadgePhase } from '@/features/badge/badgeLifecycle';
 import { BadgeCard, CARD_DEPTH, CARD_HEIGHT, CARD_WIDTH } from './BadgeCard';
 import { Band } from './Band';
 import { computeDragTarget, isClick, type Vec2, type Vec3 } from './dragMath';
+import { Scissors } from './Scissors';
 import { useBadgeTextures } from './useBadgeTextures';
 
 // Mirrors rapier's RigidBodyType enum; rapier3d-compat is only a transitive dependency.
 const BODY_TYPE = { dynamic: 0, kinematicPosition: 2 } as const;
 const SEGMENT_LENGTH = 1;
 const CARD_TOP: [number, number, number] = [0, CARD_HEIGHT / 2 + 0.08, 0];
+// Far enough below the stage that the scissors finish flying away before a fresh badge arrives.
+const FALL_OUT_Y = -12;
 const SEGMENT_PROPS: RigidBodyProps = {
   type: 'dynamic',
   canSleep: true,
@@ -37,7 +41,10 @@ interface PressState {
 export interface LanyardSceneProps {
   readonly content: BadgeContent;
   readonly flipped: boolean;
+  readonly phase: BadgePhase;
   readonly onFlip: () => void;
+  readonly onSnip: () => void;
+  readonly onFellOut: () => void;
 }
 
 function useRope(
@@ -45,16 +52,33 @@ function useRope(
   j1: RefObject<RapierRigidBody>,
   j2: RefObject<RapierRigidBody>,
   j3: RefObject<RapierRigidBody>,
-  card: RefObject<RapierRigidBody>,
 ): void {
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], SEGMENT_LENGTH]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], SEGMENT_LENGTH]);
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], SEGMENT_LENGTH]);
-  useSphericalJoint(j3, card, [[0, 0, 0], CARD_TOP]);
+}
+
+interface CardClipProps {
+  readonly lanyard: RefObject<RapierRigidBody>;
+  readonly card: RefObject<RapierRigidBody>;
+}
+
+// A component rather than a hook so the joint can be removed by unmounting it. It must render
+// after the rigid bodies: their effects create the bodies before this one creates the joint.
+function CardClip({ lanyard, card }: CardClipProps) {
+  useSphericalJoint(lanyard, card, [[0, 0, 0], CARD_TOP]);
+  return null;
 }
 
 /** Vercel-lanyard-style rope physics: anchor, three rope segments and a draggable card. */
-export function LanyardScene({ content, flipped, onFlip }: LanyardSceneProps) {
+export function LanyardScene({
+  content,
+  flipped,
+  phase,
+  onFlip,
+  onSnip,
+  onFellOut,
+}: LanyardSceneProps) {
   const fixed = useRef<RapierRigidBody>(null);
   const j1 = useRef<RapierRigidBody>(null);
   const j2 = useRef<RapierRigidBody>(null);
@@ -64,12 +88,24 @@ export function LanyardScene({ content, flipped, onFlip }: LanyardSceneProps) {
   const pointerWorld = useMemo(() => new Vector3(), []);
   const direction = useMemo(() => new Vector3(), []);
   const bandBodies = useMemo(() => [j3, j2, j1, fixed], []);
+  const lanyardEnd = useCallback(() => j3.current?.translation(), []);
   const textures = useBadgeTextures(content);
+  const cut = phase === 'falling';
 
-  useRope(fixed, j1, j2, j3, card);
+  useRope(fixed, j1, j2, j3);
+
+  useEffect(() => {
+    const body = card.current;
+    if (!cut || !body) return;
+    setPress(null);
+    body.setBodyType(BODY_TYPE.dynamic, true);
+    // The rope damping would turn the drop into a slow glide.
+    body.setLinearDamping(0);
+  }, [cut]);
 
   useFrame(({ pointer, camera }) => {
     const body = card.current;
+    if (cut && body && body.translation().y < FALL_OUT_Y) onFellOut();
     if (!press || !body) return;
     pointerWorld.set(pointer.x, pointer.y, 0.5).unproject(camera);
     direction.copy(pointerWorld).sub(camera.position).normalize();
@@ -79,7 +115,7 @@ export function LanyardScene({ content, flipped, onFlip }: LanyardSceneProps) {
 
   const handlePointerDown = (event: ThreeEvent<PointerEvent>) => {
     const body = card.current;
-    if (!body) return;
+    if (!body || cut) return;
     event.stopPropagation();
     (event.target as Element | null)?.setPointerCapture?.(event.pointerId);
     const position = body.translation();
@@ -128,6 +164,8 @@ export function LanyardScene({ content, flipped, onFlip }: LanyardSceneProps) {
           </group>
         </RigidBody>
       </group>
+      {!cut && <CardClip lanyard={j3} card={card} />}
+      {phase !== 'attached' && <Scissors target={lanyardEnd} onSnip={onSnip} />}
       <Band bodies={bandBodies} />
     </>
   );

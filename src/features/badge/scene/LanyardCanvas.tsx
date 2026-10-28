@@ -1,6 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 import { Physics } from '@react-three/rapier';
 import type { BadgeContent } from '@/features/badge/badgeContent';
+import type { BadgePhase } from '@/features/badge/badgeLifecycle';
 import { CARD_HEIGHT } from './BadgeCard';
 import { distanceToFill } from './framing';
 import { LanyardScene } from './LanyardScene';
@@ -14,11 +15,14 @@ export interface LanyardCanvasProps {
   /** Changing it swaps in a fresh badge. */
   readonly generation: number;
   readonly flipped: boolean;
+  readonly phase: BadgePhase;
   readonly onFlip: () => void;
+  readonly onSnip: () => void;
+  readonly onFellOut: () => void;
 }
 
 /** Offline-friendly canvas (no remote HDRs) hosting the physics lanyard badge. */
-export function LanyardCanvas({ content, generation, flipped, onFlip }: LanyardCanvasProps) {
+export function LanyardCanvas({ content, generation, ...scene }: LanyardCanvasProps) {
   const { name, title } = content.front;
   return (
     <div
@@ -32,7 +36,7 @@ export function LanyardCanvas({ content, generation, flipped, onFlip }: LanyardC
         <directionalLight position={[-5, 2, -5]} intensity={1} />
         <Physics gravity={[0, -40, 0]} timeStep={1 / 60} interpolate>
           {/* Remounting rebuilds every body and joint, so the new badge swings in as on first load. */}
-          <LanyardScene key={generation} content={content} flipped={flipped} onFlip={onFlip} />
+          <LanyardScene key={generation} content={content} {...scene} />
         </Physics>
       </Canvas>
     </div>

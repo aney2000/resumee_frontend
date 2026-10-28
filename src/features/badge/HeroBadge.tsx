@@ -38,7 +38,10 @@ export function HeroBadge({ content, canUseWebGL = supportsWebGL }: HeroBadgePro
           content={content}
           generation={badge.generation}
           flipped={badge.flipped}
+          phase={badge.phase}
           onFlip={badge.flip}
+          onSnip={badge.snipped}
+          onFellOut={badge.fellOut}
         />
       </Suspense>
       <p className={styles.hint} aria-hidden="true">
