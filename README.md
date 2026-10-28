@@ -20,6 +20,8 @@ A portfolio whose first impression is something you can play with. Visitors land
 
 **Navigation:** the top bar jumps to each section.
 
+**Get in touch** opens an email to the address from the profile. **Download CV** opens the print dialog: choose _Save as PDF_ to get the whole CV on clean, printer-friendly pages without the 3D parts.
+
 Without WebGL, the badge and the 3D CV are replaced by accessible 2D versions.
 
 ## Run it
