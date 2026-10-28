@@ -7,7 +7,7 @@ A personal hero page and interactive CV built with React 18, TypeScript (strict)
 - **3D CV journey**: a camera path through your milestones, with an accessible panel and keyboard controls.
 - **Timeline sections** for experience, education, projects, courses and skills.
 
-Without WebGL or with `prefers-reduced-motion`, every 3D feature falls back to an accessible 2D version.
+Without WebGL, every 3D feature falls back to an accessible 2D version.
 
 ## Quick start
 
@@ -43,18 +43,16 @@ CHOKIDAR_USEPOLLING=true npm run dev -- --host   # http://localhost:5173
 
 ## Troubleshooting: I only see the 2D version
 
-The 3D badge and the 3D CV are replaced by their 2D fallbacks when the browser reports **no WebGL** or **`prefers-reduced-motion: reduce`**. The fallback badge then flips instantly instead of animating.
+The 3D badge and the 3D CV are replaced by their 2D fallbacks only when the browser reports **no WebGL**. The OS "reduced motion" preference does not switch to 2D.
 
-1. **Reduced motion (most common on Windows).** Turn on _Settings -> Accessibility -> Visual effects -> Animation effects_ and reload the page. To test without changing the OS setting: Chrome/Edge DevTools -> `Ctrl+Shift+P` -> _Show Rendering_ -> _Emulate CSS media feature prefers-reduced-motion_ -> `no-preference`, then reload.
-2. **WebGL unavailable.** Check `chrome://gpu` (or `edge://gpu`) for "WebGL: Hardware accelerated" and enable _Use graphics acceleration when available_ in the browser settings.
-3. **Quick check** in the DevTools console:
+1. **WebGL unavailable.** Check `chrome://gpu` (or `edge://gpu`) for "WebGL: Hardware accelerated" and enable _Use graphics acceleration when available_ in the browser settings. Remote Desktop sessions, VMs and some corporate GPU policies may disable it.
+2. **Quick check** in the DevTools console:
 
    ```js
-   matchMedia('(prefers-reduced-motion: reduce)').matches; // must be false
    !!document.createElement('canvas').getContext('webgl2'); // must be true
    ```
 
-With both conditions met, the hero shows the lanyard (_Drag me - click to flip_) and the 3D CV section renders a canvas.
+With WebGL available, the hero shows the lanyard (_Drag me - click to flip_) and the 3D CV section renders a canvas.
 
 ## Make it yours
 
@@ -107,7 +105,7 @@ src/
 - **Repository + context provider.** Components depend on the `ProfileRepository` interface delivered through `ProfileContext`, not on the data file (dependency inversion). The data source can be swapped (static file, API, test fake) without touching UI code.
 - **Sections registry.** `src/app/sections.tsx` is the single source of truth for page order and navigation entries. Adding a section means adding one entry, not editing the page or nav (open/closed).
 - **Timeline sources as strategies.** `src/domain/timelineSources.ts` maps each content type to timeline entries; new content types plug in without changing the timeline builder (open/closed).
-- **Capability strategy with fallbacks.** WebGL support and `prefers-reduced-motion` decide between the 3D and the accessible 2D rendering, so the content is always reachable by keyboard and screen readers.
+- **Capability strategy with fallbacks.** WebGL support decides between the 3D and the accessible 2D rendering, so the content is always reachable by keyboard and screen readers. Reduced motion is deliberately not a gate: Windows reports it whenever _Animation effects_ is off, which would hide the 3D scenes on many machines.
 - **Lazy-loaded 3D.** three.js, drei and rapier load only when a 3D scene is actually rendered. Initial bundle: `index` 25 kB (9 kB gzip) + `vendor-react` 152 kB (48 kB gzip) + 15 kB CSS. Deferred chunks (split via `manualChunks`, never modulepreloaded): `vendor-rapier` 2.06 MB (766 kB gzip, inlined physics WASM), `vendor-three` 683 kB (175 kB gzip), `vendor-r3f` 199 kB (63 kB gzip), `LanyardCanvas` 7 kB (3 kB gzip), `JourneyCanvas` 3 kB (2 kB gzip).
 - **Narrow canvas interface (ISP).** Badge painters depend on a minimal 2D-context interface rather than `CanvasRenderingContext2D`, so they are tested with a recording fake in jsdom.
 - **Pure physics and drag math.** `dragMath.ts` and the CV `layout.ts` are plain functions, unit-tested independently of the render loop.
@@ -120,7 +118,7 @@ src/
 - Test-driven: each behaviour starts with a failing test.
 - UI tests use Testing Library and query by accessible roles and names, asserting behaviour rather than implementation.
 - 3D rendering components (`scene/` folders) are intentionally thin and not rendered in jsdom; their logic (layout, drag math, navigation state, painters, capability detection) lives in pure modules that are unit-tested.
-- Current suite: 179 tests in 33 files (`npm test`).
+- Current suite: 182 tests in 34 files (`npm test`).
 
 ## Workflow
 
