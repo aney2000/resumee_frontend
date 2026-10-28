@@ -5,13 +5,21 @@ import type { BadgeContent } from '@/features/badge/badgeContent';
 import type { LanyardCanvasProps } from '@/features/badge/scene/LanyardCanvas';
 
 vi.mock('./scene/LanyardCanvas', () => ({
-  default: ({ flipped, generation, onFlip }: LanyardCanvasProps) => (
+  default: ({ flipped, generation, phase, onFlip, onSnip, onFellOut }: LanyardCanvasProps) => (
     <div
       data-testid="lanyard-canvas"
       data-flipped={String(flipped)}
       data-generation={generation}
+      data-phase={phase}
       onClick={onFlip}
-    />
+    >
+      <button type="button" onClick={onSnip}>
+        scene: snip
+      </button>
+      <button type="button" onClick={onFellOut}>
+        scene: fell out
+      </button>
+    </div>
   ),
 }));
 
@@ -72,5 +80,24 @@ describe('HeroBadge', () => {
 
     expect(canvas).toHaveAttribute('data-generation', '1');
     expect(canvas).toHaveAttribute('data-flipped', 'false');
+  });
+
+  it('cuts the lanyard, drops the badge and hangs a fresh one', async () => {
+    const user = userEvent.setup();
+    render(<HeroBadge content={content} canUseWebGL={yes} />);
+    const canvas = await screen.findByTestId('lanyard-canvas');
+    const cutButton = screen.getByRole('button', { name: 'Cut the lanyard' });
+
+    await user.click(cutButton);
+    expect(canvas).toHaveAttribute('data-phase', 'cutting');
+    expect(cutButton).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: 'scene: snip' }));
+    expect(canvas).toHaveAttribute('data-phase', 'falling');
+
+    await user.click(screen.getByRole('button', { name: 'scene: fell out' }));
+    expect(canvas).toHaveAttribute('data-phase', 'attached');
+    expect(canvas).toHaveAttribute('data-generation', '1');
+    expect(cutButton).toBeEnabled();
   });
 });

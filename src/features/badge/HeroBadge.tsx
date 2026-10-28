@@ -32,7 +32,7 @@ export function HeroBadge({ content, canUseWebGL = supportsWebGL }: HeroBadgePro
       >
         Flip badge
       </button>
-      <BadgeControls onReset={badge.reset} />
+      <BadgeControls onReset={badge.reset} onCut={badge.cut} canCut={badge.phase === 'attached'} />
       <Suspense fallback={<FlipBadge content={content} />}>
         <LanyardCanvas
           content={content}
