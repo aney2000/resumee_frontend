@@ -28,7 +28,7 @@ export const kindColors: Record<TimelineKind, string> = {
   experience: palette.accent,
   education: palette.accent2,
   project: '#f472b6',
-  course: '#facc15',
+  course: '#38bdf8',
 };
 
 const DEFAULTS: Required<LayoutOptions> = { spacing: 4.5, radius: 2.5, turn: Math.PI / 3 };
