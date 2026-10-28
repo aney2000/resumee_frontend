@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # ---- deps: install exact dependencies from the lockfile ----
-FROM node:20.18-alpine3.20 AS deps
+FROM node:24.22-alpine3.24 AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
@@ -17,7 +17,7 @@ COPY --from=verify /tmp/verified /tmp/verified
 RUN npm run build
 
 # ---- runtime: static files served by unprivileged nginx ----
-FROM nginx:1.27.2-alpine3.20 AS runtime
+FROM nginx:1.30.6-alpine3.24 AS runtime
 RUN rm -f /etc/nginx/conf.d/default.conf \
     && chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx \
     && touch /var/run/nginx.pid && chown nginx:nginx /var/run/nginx.pid
