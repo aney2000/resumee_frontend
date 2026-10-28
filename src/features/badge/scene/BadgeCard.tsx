@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import { MathUtils, type Group } from 'three';
+import { palette } from '@/styles/palette';
 import type { BadgeTextures } from './useBadgeTextures';
 
 export const CARD_WIDTH = 1.5;
@@ -29,7 +30,7 @@ export function BadgeCard({ textures, flipped }: BadgeCardProps) {
   return (
     <group ref={pivot}>
       <RoundedBox args={[CARD_WIDTH, CARD_HEIGHT, CARD_DEPTH]} radius={0.06} smoothness={4}>
-        <meshPhysicalMaterial color="#1e1b2e" roughness={0.4} clearcoat={0.6} />
+        <meshPhysicalMaterial color={palette.badgeBody} roughness={0.4} clearcoat={0.6} />
       </RoundedBox>
       <mesh position={[0, 0, FACE_OFFSET]}>
         <planeGeometry args={[CARD_WIDTH * 0.96, CARD_HEIGHT * 0.96]} />
@@ -41,7 +42,7 @@ export function BadgeCard({ textures, flipped }: BadgeCardProps) {
       </mesh>
       <mesh position={[0, CARD_HEIGHT / 2 + 0.08, 0]} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[0.09, 0.025, 12, 24]} />
-        <meshStandardMaterial color="#c0c0c8" metalness={0.9} roughness={0.25} />
+        <meshStandardMaterial color={palette.steel} metalness={0.9} roughness={0.25} />
       </mesh>
     </group>
   );

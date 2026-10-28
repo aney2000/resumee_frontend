@@ -134,7 +134,7 @@
 .label {
   padding: 2px 8px;
   border-radius: var(--radius-pill);
-  background: rgba(11, 13, 18, 0.8);
+  background: color-mix(in srgb, var(--color-bg) 80%, transparent);
   color: var(--color-text);
   font-size: 13px;
   white-space: nowrap;

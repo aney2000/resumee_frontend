@@ -16,7 +16,7 @@ body {
   font-size: var(--font-size-md);
   line-height: 1.6;
   color: var(--color-text);
-  background: var(--glow-violet), var(--glow-cyan), var(--color-bg);
+  background: var(--glow-primary), var(--glow-secondary), var(--color-bg);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }

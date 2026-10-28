@@ -45,7 +45,8 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    css: false,
+    // Only the design tokens are processed, so palette.test.ts can compare them with palette.ts.
+    css: { include: /tokens\.css/ },
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],

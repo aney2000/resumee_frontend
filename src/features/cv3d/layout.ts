@@ -1,5 +1,6 @@
 import { compareYearMonth } from '@/domain/dateRange';
 import type { TimelineEntry, TimelineKind } from '@/domain/timeline';
+import { palette } from '@/styles/palette';
 
 export type Vec3 = readonly [number, number, number];
 
@@ -24,8 +25,8 @@ export interface CameraTarget {
 
 // Record forces a colour for every TimelineKind at compile time.
 export const kindColors: Record<TimelineKind, string> = {
-  experience: '#8b5cf6',
-  education: '#22d3ee',
+  experience: palette.accent,
+  education: palette.accent2,
   project: '#f472b6',
   course: '#facc15',
 };

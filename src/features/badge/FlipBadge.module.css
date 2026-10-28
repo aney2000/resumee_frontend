@@ -59,7 +59,11 @@
   padding: var(--space-4) var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: linear-gradient(160deg, #161a24, #0f1219);
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-badge), white 4%),
+    var(--color-badge)
+  );
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
   backface-visibility: hidden;
   text-align: center;

@@ -3,10 +3,10 @@ import { extend, useFrame, useThree } from '@react-three/fiber';
 import type { RapierRigidBody } from '@react-three/rapier';
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import { CatmullRomCurve3, Vector2, Vector3 } from 'three';
+import { palette } from '@/styles/palette';
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
-const ACCENT_VIOLET = '#8b5cf6';
 const CURVE_SEGMENTS = 32;
 
 export interface BandProps {
@@ -44,7 +44,7 @@ export function Band({ bodies }: BandProps) {
     <mesh>
       <meshLineGeometry ref={geometry} />
       <meshLineMaterial
-        color={ACCENT_VIOLET}
+        color={palette.accent}
         lineWidth={0.12}
         resolution={resolution}
         depthTest={false}

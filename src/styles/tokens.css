@@ -7,9 +7,18 @@
   --color-text-muted: #9aa1b2;
   --color-accent: #8b5cf6;
   --color-accent-2: #22d3ee;
+  --color-badge: #11141c;
   --gradient-accent: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
-  --glow-violet: radial-gradient(circle at 15% 10%, rgba(139, 92, 246, 0.18), transparent 45%);
-  --glow-cyan: radial-gradient(circle at 85% 30%, rgba(34, 211, 238, 0.12), transparent 40%);
+  --glow-primary: radial-gradient(
+    circle at 15% 10%,
+    color-mix(in srgb, var(--color-accent) 18%, transparent),
+    transparent 45%
+  );
+  --glow-secondary: radial-gradient(
+    circle at 85% 30%,
+    color-mix(in srgb, var(--color-accent-2) 12%, transparent),
+    transparent 40%
+  );
 
   --font-sans:
     'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;

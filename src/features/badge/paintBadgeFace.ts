@@ -1,5 +1,6 @@
 import type { BadgeBack, BadgeFront } from '@/features/badge/badgeContent';
 import { initials } from '@/features/badge/badgeContent';
+import { palette } from '@/styles/palette';
 
 /** The subset of the 2D canvas API the painters rely on. */
 export type BadgePainterContext = Pick<
@@ -30,15 +31,6 @@ export interface FaceSize {
   readonly height: number;
 }
 
-// Mirrors src/styles/tokens.css: canvas cannot read CSS custom properties.
-const palette = {
-  background: '#11141c',
-  text: '#e8eaf0',
-  muted: '#9aa1b2',
-  accent: '#8b5cf6',
-  accent2: '#22d3ee',
-} as const;
-
 const FONT_FAMILY = "Inter, system-ui, 'Segoe UI', Roboto, sans-serif";
 const font = (weight: number, px: number) => `${weight} ${Math.round(px)}px ${FONT_FAMILY}`;
 
@@ -64,7 +56,7 @@ export function wrapText(
 }
 
 function paintBackground(ctx: BadgePainterContext, { width, height }: FaceSize): void {
-  ctx.fillStyle = palette.background;
+  ctx.fillStyle = palette.badgeFace;
   ctx.fillRect(0, 0, width, height);
   ctx.fillStyle = palette.accent;
   ctx.fillRect(0, 0, width, height * 0.02);

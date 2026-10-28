@@ -9,9 +9,9 @@
 
 .tag {
   padding: var(--space-1) var(--space-3);
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  border: 1px solid color-mix(in srgb, var(--color-accent-2) 30%, transparent);
   border-radius: var(--radius-pill);
-  background: rgba(34, 211, 238, 0.08);
+  background: color-mix(in srgb, var(--color-accent-2) 8%, transparent);
   color: var(--color-accent-2);
   font-size: var(--font-size-sm);
 }

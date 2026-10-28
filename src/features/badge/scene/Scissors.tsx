@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { Group } from 'three';
+import { palette } from '@/styles/palette';
 import type { Vec3 } from './dragMath';
 import { SCISSORS_DURATION_SECONDS, scissorsPose, SNIP_AT } from './scissorsMotion';
 
@@ -13,8 +14,8 @@ export interface ScissorsProps {
 const BLADE_LENGTH = 0.9;
 // The blades meet the lanyard near their middle, not at the pivot screw.
 const PIVOT_TO_CUT = BLADE_LENGTH * 0.55;
-const STEEL = { color: '#c0c0c8', metalness: 0.9, roughness: 0.25 } as const;
-const HANDLE_COLOR = '#22d3ee';
+const STEEL = { color: palette.steel, metalness: 0.9, roughness: 0.25 } as const;
+const HANDLE_COLOR = palette.accent2;
 
 function ScissorsHalf({ side }: { readonly side: 1 | -1 }) {
   return (
