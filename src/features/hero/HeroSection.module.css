@@ -55,3 +55,16 @@
     padding-inline: var(--space-5);
   }
 }
+
+@media print {
+  .hero {
+    min-height: 0;
+    padding-block: 0 var(--space-4);
+  }
+
+  /* Gradient text renders as invisible transparent ink in print. */
+  .headline {
+    background: none;
+    color: var(--color-accent);
+  }
+}

@@ -67,7 +67,7 @@ export function Cv3dSection({ id, entries, canUseWebGL = supportsWebGL }: Cv3dSe
   );
 
   return (
-    <Section id={id} title="My journey in 3D" eyebrow="3D CV">
+    <Section id={id} title="My journey in 3D" eyebrow="3D CV" hideInPrint>
       <div
         className={styles.layout}
         tabIndex={0}

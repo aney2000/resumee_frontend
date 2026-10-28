@@ -11,7 +11,7 @@ interface SiteNavProps {
 
 export function SiteNav({ items }: SiteNavProps) {
   return (
-    <header className={styles.header}>
+    <header className={styles.header} data-print="hide">
       <a className={styles.skip} href="#content">
         Skip to content
       </a>

@@ -39,6 +39,7 @@ describe('HeroSection', () => {
     render(<HeroSection identity={identity} visual={<p>3D badge</p>} />);
 
     expect(screen.getByText('3D badge')).toBeInTheDocument();
+    expect(screen.getByText('3D badge').parentElement).toHaveAttribute('data-print', 'hide');
   });
 
   it('offers a primary contact action when the profile has an email', () => {

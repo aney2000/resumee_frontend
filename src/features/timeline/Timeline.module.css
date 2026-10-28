@@ -32,6 +32,15 @@
   transform: none;
 }
 
+@media print {
+  /* Paper never scrolls, so the scroll-in reveal must not hide anything. */
+  .item {
+    opacity: 1;
+    transform: none;
+    break-inside: avoid;
+  }
+}
+
 .dot {
   position: absolute;
   top: var(--space-4);

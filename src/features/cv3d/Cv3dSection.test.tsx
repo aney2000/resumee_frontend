@@ -35,6 +35,10 @@ describe('Cv3dSection', () => {
     render(<Cv3dSection id="journey" entries={entries} canUseWebGL={no} />);
 
     expect(screen.getByRole('heading', { name: 'My journey in 3D' })).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'My journey in 3D' })).toHaveAttribute(
+      'data-print',
+      'hide',
+    );
     const items = within(screen.getByRole('list', { name: 'Milestones' })).getAllByRole('button');
     expect(items.map((item) => item.textContent)).toEqual(['Title a', 'Title b', 'Title c']);
     expect(items[0]).toHaveAttribute('aria-current', 'true');

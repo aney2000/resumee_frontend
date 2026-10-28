@@ -24,4 +24,14 @@ describe('Section', () => {
 
     expect(screen.getByText('What I use')).toBeInTheDocument();
   });
+
+  it('can be left out of the printed CV', () => {
+    render(
+      <Section id="journey" title="Journey" hideInPrint>
+        <p>content</p>
+      </Section>,
+    );
+
+    expect(screen.getByRole('region', { name: 'Journey' })).toHaveAttribute('data-print', 'hide');
+  });
 });

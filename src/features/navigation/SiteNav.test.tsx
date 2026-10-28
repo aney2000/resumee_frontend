@@ -24,4 +24,10 @@ describe('SiteNav', () => {
       '#content',
     );
   });
+
+  it('is left out of the printed CV', () => {
+    render(<SiteNav items={items} />);
+
+    expect(screen.getByRole('banner')).toHaveAttribute('data-print', 'hide');
+  });
 });

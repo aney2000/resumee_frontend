@@ -9,9 +9,16 @@ interface HeroSectionProps {
   readonly identity: Identity;
   readonly visual?: ReactNode;
   readonly id?: string;
+  /** Saving the page as PDF from the print dialog doubles as the CV download. */
+  readonly onDownloadCv?: () => void;
 }
 
-export function HeroSection({ identity, visual, id }: HeroSectionProps) {
+export function HeroSection({
+  identity,
+  visual,
+  id,
+  onDownloadCv = () => window.print(),
+}: HeroSectionProps) {
   const headingId = useId();
   const email = identity.socials.find((link) => link.kind === 'email');
 
@@ -24,10 +31,14 @@ export function HeroSection({ identity, visual, id }: HeroSectionProps) {
         </h1>
         <p className={styles.location}>{identity.location}</p>
         <p className={styles.summary}>{identity.summary}</p>
-        <HeroActions contactHref={email && socialHref(email)} />
+        <HeroActions contactHref={email && socialHref(email)} onDownloadCv={onDownloadCv} />
         <SocialLinks links={identity.socials} />
       </div>
-      {visual && <div className={styles.visual}>{visual}</div>}
+      {visual && (
+        <div className={styles.visual} data-print="hide">
+          {visual}
+        </div>
+      )}
     </section>
   );
 }

@@ -47,6 +47,19 @@
   --transition-base: 250ms ease;
 }
 
+@media print {
+  /* Ink on paper: dark text and deeper greens that stay legible without a dark background. */
+  :root {
+    --color-bg: #ffffff;
+    --color-surface: transparent;
+    --color-border: #d4ddd7;
+    --color-text: #111a15;
+    --color-text-muted: #4b5a51;
+    --color-accent: #047857;
+    --color-accent-2: #4d7c0f;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --transition-fast: 0ms;
