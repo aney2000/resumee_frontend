@@ -18,7 +18,9 @@ RUN npm run build
 
 # ---- runtime: static files served by unprivileged nginx ----
 FROM nginx:1.30.6-alpine3.24 AS runtime
-RUN rm -f /etc/nginx/conf.d/default.conf \
+# Pull Alpine security fixes published after the base image was built.
+RUN apk upgrade --no-cache \
+    && rm -f /etc/nginx/conf.d/default.conf \
     && chown -R nginx:nginx /var/cache/nginx /var/run /var/log/nginx \
     && touch /var/run/nginx.pid && chown nginx:nginx /var/run/nginx.pid
 COPY nginx.conf /etc/nginx/conf.d/app.conf
