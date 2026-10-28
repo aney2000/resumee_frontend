@@ -26,7 +26,7 @@ const no = () => false;
 
 describe('HeroBadge', () => {
   it('falls back to the CSS flip badge when WebGL is unavailable', () => {
-    render(<HeroBadge content={content} canUseWebGL={no} prefersReducedMotion={false} />);
+    render(<HeroBadge content={content} canUseWebGL={no} />);
 
     expect(screen.getByTestId('badge-front')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Flip badge' })).toBeInTheDocument();
@@ -34,15 +34,8 @@ describe('HeroBadge', () => {
     expect(screen.queryByText('Drag me · click to flip')).not.toBeInTheDocument();
   });
 
-  it('falls back to the CSS flip badge when the user prefers reduced motion', () => {
-    render(<HeroBadge content={content} canUseWebGL={yes} prefersReducedMotion />);
-
-    expect(screen.getByTestId('badge-front')).toBeInTheDocument();
-    expect(screen.queryByTestId('lanyard-canvas')).not.toBeInTheDocument();
-  });
-
   it('lazily renders the 3D lanyard with a hint when capable', async () => {
-    render(<HeroBadge content={content} canUseWebGL={yes} prefersReducedMotion={false} />);
+    render(<HeroBadge content={content} canUseWebGL={yes} />);
 
     const canvas = await screen.findByTestId('lanyard-canvas');
     expect(canvas).toHaveAttribute('data-flipped', 'false');
@@ -51,7 +44,7 @@ describe('HeroBadge', () => {
 
   it('lets keyboard users flip the 3D badge', async () => {
     const user = userEvent.setup();
-    render(<HeroBadge content={content} canUseWebGL={yes} prefersReducedMotion={false} />);
+    render(<HeroBadge content={content} canUseWebGL={yes} />);
     const canvas = await screen.findByTestId('lanyard-canvas');
     const toggle = screen.getByRole('button', { name: 'Flip badge' });
 

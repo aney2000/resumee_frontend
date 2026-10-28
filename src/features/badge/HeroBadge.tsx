@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from 'react';
 import type { BadgeContent } from '@/features/badge/badgeContent';
-import { supportsWebGL, usePrefersReducedMotion } from '@/features/badge/capabilities';
+import { supportsWebGL } from '@/features/badge/capabilities';
 import { FlipBadge } from '@/features/badge/FlipBadge';
 import styles from './HeroBadge.module.css';
 
@@ -10,21 +10,14 @@ const LanyardCanvas = lazy(() => import('./scene/LanyardCanvas'));
 export interface HeroBadgeProps {
   readonly content: BadgeContent;
   readonly canUseWebGL?: () => boolean;
-  readonly prefersReducedMotion?: boolean;
 }
 
 /** Picks the physics lanyard when the device can run it, otherwise the CSS flip badge. */
-export function HeroBadge({
-  content,
-  canUseWebGL = supportsWebGL,
-  prefersReducedMotion,
-}: HeroBadgeProps) {
-  const systemReducedMotion = usePrefersReducedMotion();
+export function HeroBadge({ content, canUseWebGL = supportsWebGL }: HeroBadgeProps) {
   const [webGL] = useState(canUseWebGL);
   const [flipped, setFlipped] = useState(false);
-  const reducedMotion = prefersReducedMotion ?? systemReducedMotion;
 
-  if (!webGL || reducedMotion) return <FlipBadge content={content} />;
+  if (!webGL) return <FlipBadge content={content} />;
 
   const flip = () => setFlipped((value) => !value);
 
