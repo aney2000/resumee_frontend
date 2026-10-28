@@ -36,9 +36,10 @@
 .list {
   display: flex;
   gap: var(--space-1);
-  justify-content: flex-end;
+  /* Right-aligned when it fits; an auto margin (unlike flex-end) never pushes overflow out of scroll reach. */
+  width: max-content;
+  margin: 0 0 0 auto;
   list-style: none;
-  margin: 0;
   padding: 0;
 }
 
