@@ -1,7 +1,7 @@
 .stage {
   position: relative;
   width: 100%;
-  height: min(70vh, 32rem);
+  height: min(85vh, 48rem);
 }
 
 .hint {
